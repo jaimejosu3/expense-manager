@@ -1,5 +1,4 @@
-# backend/Dockerfile
-FROM node:18
+FROM node:lts
 
 WORKDIR /usr/src/app
 
