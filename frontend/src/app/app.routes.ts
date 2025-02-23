@@ -1,10 +1,12 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { publicGuard } from './core/guards/public.guard';
 
 export const routes: Routes = [
     {
         path: 'auth',
-        loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES)
+        loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES),
+        canActivate: [publicGuard]
     },
     {
         path: '',

@@ -39,9 +39,10 @@ export class AuthService {
     }
 
     private handleAuthResponse(response: AuthResponse): void {
-        localStorage.setItem('token', response.access_token);
-        localStorage.setItem('user', JSON.stringify(response.user));
-        this.currentUserSubject.next(response.user);
+        console.log(response);
+        localStorage.setItem('token', response.data.access_token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        this.currentUserSubject.next(response.data.user);
     }
 
     logout(): void {
@@ -52,5 +53,13 @@ export class AuthService {
 
     isAuthenticated(): boolean {
         return !!localStorage.getItem('token');
+    }
+
+    getCurrentUser(): User | null {
+        return this.currentUserSubject.value;
+    }
+
+    getStoredToken(): string | null {
+        return localStorage.getItem('token');
     }
 }

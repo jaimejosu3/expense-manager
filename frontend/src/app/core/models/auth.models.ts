@@ -3,6 +3,7 @@ export interface User {
     email: string;
     firstName: string;
     lastName: string;
+    role?: string;
 }
 
 export interface LoginRequest {
@@ -18,6 +19,8 @@ export interface RegisterRequest {
 }
 
 export interface AuthResponse {
-    access_token: string;
-    user: User;
+    data: {
+        access_token: string;
+        user: User;
+    }
 }

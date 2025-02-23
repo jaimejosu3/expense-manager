@@ -9,12 +9,13 @@ import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { routes } from './app.routes';
 import { tokenInterceptor } from './core/interceptors/token.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
+import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([tokenInterceptor, errorInterceptor])
+      withInterceptors([jwtInterceptor, tokenInterceptor, errorInterceptor])
     ),
     provideAnimations(),
     provideStore(),
