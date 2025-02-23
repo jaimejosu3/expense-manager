@@ -8,14 +8,20 @@ export class Category extends BaseEntity {
     name: string;
 
     @Column({ nullable: true })
-    description: string;
+    description?: string;
 
     @Column()
     color: string;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+    budget?: number;
 
     @Column({ default: true })
     isActive: boolean;
 
     @OneToMany(() => Expense, expense => expense.category)
     expenses: Expense[];
+
+    @Column()
+    userId: string;
 }

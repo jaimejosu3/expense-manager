@@ -14,11 +14,26 @@ export class Expense extends BaseEntity {
     @Column({ type: 'timestamp' })
     date: Date;
 
+    @Column({ nullable: true })
+    notes?: string;
+
+    @Column({ default: false })
+    isRecurring: boolean;
+
+    @Column({ type: 'varchar', nullable: true })
+    recurrenceType?: 'daily' | 'weekly' | 'monthly' | 'yearly';
+
     @ManyToOne(() => Category, category => category.expenses)
     @JoinColumn({ name: 'categoryId' })
     category: Category;
 
+    @Column()
+    categoryId: string;
+
     @ManyToOne(() => User)
     @JoinColumn({ name: 'userId' })
     user: User;
+
+    @Column()
+    userId: string;
 }
