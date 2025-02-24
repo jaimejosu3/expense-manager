@@ -10,12 +10,13 @@ import { routes } from './app.routes';
 import { tokenInterceptor } from './core/interceptors/token.interceptor';
 import { errorInterceptor } from './core/interceptors/error.interceptor';
 import { jwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { cacheInterceptor } from './core/interceptors/cache.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideHttpClient(
-      withInterceptors([jwtInterceptor, tokenInterceptor, errorInterceptor])
+      withInterceptors([jwtInterceptor, tokenInterceptor, errorInterceptor, cacheInterceptor])
     ),
     provideAnimations(),
     provideStore(),

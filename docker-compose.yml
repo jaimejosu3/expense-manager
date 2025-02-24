@@ -11,25 +11,20 @@ services:
       - ./backend:/usr/src/app
       - /usr/src/app/node_modules
     environment:
-      # Node
       - NODE_ENV=development
       - PORT=3000
-
-      # Database
       - DB_HOST=db
       - DB_PORT=3306
       - DB_USERNAME=user
       - DB_PASSWORD=password
       - DB_DATABASE=expense_tracker
-
-      # JWT
       - JWT_SECRET=your-super-secret-key-here
       - JWT_EXPIRATION=1d
     depends_on:
       - db
-    command: npm run start:dev
     networks:
       - expense-network
+    tty: true
 
   frontend:
     build:
@@ -42,12 +37,11 @@ services:
       - /usr/src/app/node_modules
     environment:
       - NODE_ENV=development
-      - API_URL=http://localhost:3000/api
-    command: npm start
     depends_on:
       - backend
     networks:
       - expense-network
+    tty: true
 
   db:
     image: mysql:8.0
