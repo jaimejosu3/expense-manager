@@ -6,6 +6,7 @@ import { ExpenseService } from '../services/expense.service';
 import { CreateExpenseDto } from '../dto/create-expense.dto';
 import { UpdateExpenseDto } from '../dto/update-expense.dto';
 import { ExpenseFiltersDto } from '../dto/expense-filters.dto';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @ApiTags('expenses')
 @ApiBearerAuth()
@@ -15,17 +16,17 @@ export class ExpenseController {
     constructor(private readonly expenseService: ExpenseService) { }
 
     @Post()
-    create(@Body() createExpenseDto: CreateExpenseDto, @CurrentUser() userId: string) {
+    create(@Body() createExpenseDto: CreateExpenseDto, @CurrentUser() userId: User) {
         return this.expenseService.create(createExpenseDto, userId);
     }
 
     @Get()
-    findAll(@CurrentUser() userId: string, @Query() filters: ExpenseFiltersDto) {
+    findAll(@CurrentUser() userId: User, @Query() filters: ExpenseFiltersDto) {
         return this.expenseService.findAll(userId, filters);
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string, @CurrentUser() userId: string) {
+    findOne(@Param('id') id: string, @CurrentUser() userId: User) {
         return this.expenseService.findOne(id, userId);
     }
 
@@ -33,13 +34,13 @@ export class ExpenseController {
     update(
         @Param('id') id: string,
         @Body() updateExpenseDto: UpdateExpenseDto,
-        @CurrentUser() userId: string
+        @CurrentUser() userId: User
     ) {
         return this.expenseService.update(id, updateExpenseDto, userId);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string, @CurrentUser() userId: string) {
+    remove(@Param('id') id: string, @CurrentUser() userId: User) {
         return this.expenseService.remove(id, userId);
     }
 }

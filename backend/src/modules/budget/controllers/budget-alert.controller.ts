@@ -15,6 +15,7 @@ import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { BudgetAlertService } from '../services/budget-alert.service';
 import { CreateBudgetAlertDto } from '../dto/create-budget-alert.dto';
 import { BudgetAlertDto } from '../dto/budget-response.dto';
+import { User } from '../../user/entities/user.entity';
 
 @ApiTags('budget-alerts')
 @ApiBearerAuth()
@@ -28,7 +29,7 @@ export class BudgetAlertController {
     @ApiResponse({ status: HttpStatus.CREATED, type: BudgetAlertDto })
     create(
         @Body() createBudgetAlertDto: CreateBudgetAlertDto,
-        @CurrentUser() userId: string
+        @CurrentUser() userId: User
     ) {
         return this.budgetAlertService.create(createBudgetAlertDto, userId);
     }
@@ -38,7 +39,7 @@ export class BudgetAlertController {
     @ApiResponse({ status: HttpStatus.OK, type: [BudgetAlertDto] })
     findByBudget(
         @Param('budgetId') budgetId: string,
-        @CurrentUser() userId: string
+        @CurrentUser() userId: User
     ) {
         return this.budgetAlertService.findByBudget(budgetId, userId);
     }
@@ -48,7 +49,7 @@ export class BudgetAlertController {
     @ApiResponse({ status: HttpStatus.NO_CONTENT })
     remove(
         @Param('id') id: string,
-        @CurrentUser() userId: string
+        @CurrentUser() userId: User
     ) {
         return this.budgetAlertService.remove(id, userId);
     }
@@ -58,7 +59,7 @@ export class BudgetAlertController {
     @ApiResponse({ status: HttpStatus.OK, type: BudgetAlertDto })
     resetAlert(
         @Param('id') id: string,
-        @CurrentUser() userId: string
+        @CurrentUser() userId: User
     ) {
         return this.budgetAlertService.resetAlert(id, userId);
     }

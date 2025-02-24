@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { BudgetAlert } from '../entities/budget-alert.entity';
 import { CreateBudgetAlertDto } from '../dto/create-budget-alert.dto';
 import { BudgetService } from './budget.service';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Injectable()
 export class BudgetAlertService {
@@ -13,7 +14,7 @@ export class BudgetAlertService {
         private budgetService: BudgetService,
     ) { }
 
-    async create(createBudgetAlertDto: CreateBudgetAlertDto, userId: string): Promise<BudgetAlert> {
+    async create(createBudgetAlertDto: CreateBudgetAlertDto, userId: User): Promise<BudgetAlert> {
         // Verify budget exists and belongs to user
         await this.budgetService.findOne(createBudgetAlertDto.budgetId, userId);
 
@@ -21,7 +22,7 @@ export class BudgetAlertService {
         return await this.budgetAlertRepository.save(alert);
     }
 
-    async findByBudget(budgetId: string, userId: string): Promise<BudgetAlert[]> {
+    async findByBudget(budgetId: string, userId: User): Promise<BudgetAlert[]> {
         // Verify budget exists and belongs to user
         await this.budgetService.findOne(budgetId, userId);
 
@@ -31,26 +32,26 @@ export class BudgetAlertService {
         });
     }
 
-    async remove(id: string, userId: string): Promise<void> {
+    async remove(id: string, userId: User): Promise<void> {
         const alert = await this.budgetAlertRepository.findOne({
             where: { id },
             relations: ['budget']
         });
 
-        if (!alert || alert.budget.userId !== userId) {
+        if (!alert || alert.budget.userId !== userId.id) {
             throw new NotFoundException(`Alert with ID "${id}" not found`);
         }
 
         await this.budgetAlertRepository.remove(alert);
     }
 
-    async resetAlert(id: string, userId: string): Promise<BudgetAlert> {
+    async resetAlert(id: string, userId: User): Promise<BudgetAlert> {
         const alert = await this.budgetAlertRepository.findOne({
             where: { id },
             relations: ['budget']
         });
 
-        if (!alert || alert.budget.userId !== userId) {
+        if (!alert || alert.budget.userId !== userId.id) {
             throw new NotFoundException(`Alert with ID "${id}" not found`);
         }
 

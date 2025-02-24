@@ -4,6 +4,7 @@ import { Repository, Between, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { Expense } from '../entities/expense.entity';
 import { CreateExpenseDto } from '../dto/create-expense.dto';
 import { ExpenseFiltersDto } from '../dto/expense-filters.dto';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Injectable()
 export class ExpenseService {
@@ -12,16 +13,16 @@ export class ExpenseService {
         private expenseRepository: Repository<Expense>,
     ) { }
 
-    async create(createExpenseDto: CreateExpenseDto, userId: string): Promise<Expense> {
+    async create(createExpenseDto: CreateExpenseDto, userId: User): Promise<Expense> {
         const expense = this.expenseRepository.create({
             ...createExpenseDto,
-            userId,
+            userId: userId.id,
         });
         return await this.expenseRepository.save(expense);
     }
 
-    async findAll(userId: string, filters: ExpenseFiltersDto): Promise<Expense[]> {
-        const where: any = { userId };
+    async findAll(userId: User, filters: ExpenseFiltersDto): Promise<Expense[]> {
+        const where: any = { userId: userId.id };
 
         if (filters.startDate && filters.endDate) {
             where.date = Between(filters.startDate, filters.endDate);
@@ -42,6 +43,8 @@ export class ExpenseService {
         if (filters.maxAmount) {
             where.amount = LessThanOrEqual(filters.maxAmount);
         }
+        console.log('where');
+        console.log(where);
 
         return await this.expenseRepository.find({
             where,
@@ -50,9 +53,9 @@ export class ExpenseService {
         });
     }
 
-    async findOne(id: string, userId: string): Promise<Expense> {
+    async findOne(id: string, userId: User): Promise<Expense> {
         const expense = await this.expenseRepository.findOne({
-            where: { id, userId },
+            where: { id, userId: userId.id },
             relations: ['category'],
         });
 
@@ -63,26 +66,26 @@ export class ExpenseService {
         return expense;
     }
 
-    async update(id: string, updateExpenseDto: Partial<CreateExpenseDto>, userId: string): Promise<Expense> {
+    async update(id: string, updateExpenseDto: Partial<CreateExpenseDto>, userId: User): Promise<Expense> {
         const expense = await this.findOne(id, userId);
         Object.assign(expense, updateExpenseDto);
         return await this.expenseRepository.save(expense);
     }
 
-    async remove(id: string, userId: string): Promise<void> {
-        const result = await this.expenseRepository.delete({ id, userId });
+    async remove(id: string, userId: User): Promise<void> {
+        const result = await this.expenseRepository.delete({ id, userId: userId.id });
         if (result.affected === 0) {
             throw new NotFoundException(`Expense with ID "${id}" not found`);
         }
     }
 
-    async getMonthlyTotal(userId: string, date: Date): Promise<number> {
+    async getMonthlyTotal(userId: User, date: Date): Promise<number> {
         const startDate = new Date(date.getFullYear(), date.getMonth(), 1);
         const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
         const result = await this.expenseRepository
             .createQueryBuilder('expense')
-            .where('expense.userId = :userId', { userId })
+            .where('expense.userId = :userId', { userId: userId.id })
             .andWhere('expense.date BETWEEN :startDate AND :endDate', {
                 startDate,
                 endDate,
@@ -93,11 +96,11 @@ export class ExpenseService {
         return result.total || 0;
     }
 
-    async getExpensesByCategory(userId: string, startDate: Date, endDate: Date): Promise<any[]> {
+    async getExpensesByCategory(userId: User, startDate: Date, endDate: Date): Promise<any[]> {
         return await this.expenseRepository
             .createQueryBuilder('expense')
             .leftJoinAndSelect('expense.category', 'category')
-            .where('expense.userId = :userId', { userId })
+            .where('expense.userId = :userId', { userId: userId.id })
             .andWhere('expense.date BETWEEN :startDate AND :endDate', {
                 startDate,
                 endDate,

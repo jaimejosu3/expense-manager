@@ -7,6 +7,7 @@ import { CreateBudgetDto } from '../dto/create-budget.dto';
 import { UpdateBudgetDto } from '../dto/update-budget.dto';
 import { BudgetFiltersDto } from '../dto/budget-filters.dto';
 import { BudgetStatusDto, BudgetSummaryDto } from '../dto/budget-response.dto';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @Injectable()
 export class BudgetService {
@@ -17,22 +18,22 @@ export class BudgetService {
         private budgetAlertRepository: Repository<BudgetAlert>
     ) { }
 
-    async create(createBudgetDto: CreateBudgetDto, userId: string): Promise<Budget> {
+    async create(createBudgetDto: CreateBudgetDto, userId: User): Promise<Budget> {
         if (new Date(createBudgetDto.endDate) <= new Date(createBudgetDto.startDate)) {
             throw new BadRequestException('End date must be after start date');
         }
 
         const budget = this.budgetRepository.create({
             ...createBudgetDto,
-            userId,
+            userId: userId.id,
             currentSpent: 0
         });
 
         return await this.budgetRepository.save(budget);
     }
 
-    async findAll(userId: string, filters: BudgetFiltersDto): Promise<BudgetSummaryDto[]> {
-        const where: any = { userId };
+    async findAll(userId: User, filters: BudgetFiltersDto): Promise<BudgetSummaryDto[]> {
+        const where: any = { userId: userId.id };
 
         if (filters.startDate && filters.endDate) {
             where.startDate = Between(filters.startDate, filters.endDate);
@@ -74,9 +75,9 @@ export class BudgetService {
         };
     }
 
-    async findOne(id: string, userId: string): Promise<Budget> {
+    async findOne(id: string, userId: User): Promise<Budget> {
         const budget = await this.budgetRepository.findOne({
-            where: { id, userId },
+            where: { id, userId: userId.id },
             relations: ['category', 'alerts']
         });
 
@@ -87,7 +88,7 @@ export class BudgetService {
         return budget;
     }
 
-    async update(id: string, updateBudgetDto: UpdateBudgetDto, userId: string): Promise<Budget> {
+    async update(id: string, updateBudgetDto: UpdateBudgetDto, userId: User): Promise<Budget> {
         const budget = await this.findOne(id, userId);
 
         if (updateBudgetDto.startDate && updateBudgetDto.endDate) {
@@ -100,14 +101,14 @@ export class BudgetService {
         return await this.budgetRepository.save(budget);
     }
 
-    async remove(id: string, userId: string): Promise<void> {
-        const result = await this.budgetRepository.delete({ id, userId });
+    async remove(id: string, userId: User): Promise<void> {
+        const result = await this.budgetRepository.delete({ id, userId: userId.id });
         if (result.affected === 0) {
             throw new NotFoundException(`Budget with ID "${id}" not found`);
         }
     }
 
-    async getBudgetStatus(id: string, userId: string): Promise<BudgetStatusDto> {
+    async getBudgetStatus(id: string, userId: User): Promise<BudgetStatusDto> {
         const budget = await this.findOne(id, userId);
         const percentageUsed = (budget.currentSpent / budget.amount) * 100;
 
@@ -147,7 +148,6 @@ export class BudgetService {
                 alert.isTriggered = true;
                 alert.lastTriggeredAt = new Date();
                 await this.budgetAlertRepository.save(alert);
-                // Here you would typically trigger a notification
             }
         }
     }

@@ -5,6 +5,7 @@ import { CurrentUser } from '../../auth/decorators/current-user.decorator';
 import { CategoryService } from '../services/category.service';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
+import { User } from 'src/modules/user/entities/user.entity';
 
 @ApiTags('categories')
 @ApiBearerAuth()
@@ -14,17 +15,17 @@ export class CategoryController {
     constructor(private readonly categoryService: CategoryService) { }
 
     @Post()
-    create(@Body() createCategoryDto: CreateCategoryDto, @CurrentUser() userId: string) {
+    create(@Body() createCategoryDto: CreateCategoryDto, @CurrentUser() userId: User) {
         return this.categoryService.create(createCategoryDto, userId);
     }
 
     @Get()
-    findAll(@CurrentUser() userId: string) {
+    findAll(@CurrentUser() userId: User) {
         return this.categoryService.findAll(userId);
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string, @CurrentUser() userId: string) {
+    findOne(@Param('id') id: string, @CurrentUser() userId: User) {
         return this.categoryService.findOne(id, userId);
     }
 
@@ -32,13 +33,13 @@ export class CategoryController {
     update(
         @Param('id') id: string,
         @Body() updateCategoryDto: UpdateCategoryDto,
-        @CurrentUser() userId: string
+        @CurrentUser() userId: User
     ) {
         return this.categoryService.update(id, updateCategoryDto, userId);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string, @CurrentUser() userId: string) {
+    remove(@Param('id') id: string, @CurrentUser() userId: User) {
         return this.categoryService.remove(id, userId);
     }
 }
