@@ -4,8 +4,8 @@ import { Repository, Between, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
 import { Expense } from '../entities/expense.entity';
 import { CreateExpenseDto } from '../dto/create-expense.dto';
 import { ExpenseFiltersDto } from '../dto/expense-filters.dto';
-import { User } from 'src/modules/user/entities/user.entity';
-import { BudgetService } from 'src/modules/budget/services/budget.service';
+import { User } from '../../../modules/user/entities/user.entity';
+import { BudgetService } from '../../../modules/budget/services/budget.service';
 import { CategoryService } from './category.service';
 
 @Injectable()
@@ -22,6 +22,7 @@ export class ExpenseService {
             ...createExpenseDto,
             userId: userId.id,
         });
+        console.log(expense)
         const currentDate = new Date(createExpenseDto.date);
         const budget = await this.budgetService.findOneByCategoryAndDate(expense.categoryId, currentDate, userId);
 
