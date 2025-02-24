@@ -8,6 +8,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ExpenseService } from '../../services/expense.service';
+import { CategoryService } from '../../../categories/services/category.service';
 
 @Component({
   selector: 'app-expense-form',
@@ -33,7 +34,8 @@ export class ExpenseFormComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private expenseService: ExpenseService
+    private expenseService: ExpenseService,
+    private categoryService: CategoryService,
   ) {
     this.expenseForm = this.fb.group({
       description: ['', Validators.required],
@@ -49,12 +51,18 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   loadCategories(): void {
-    // Implementar carga de categorías
+    this.categoryService.getCategories().subscribe(categories => {
+      this.categories = categories;
+    });
   }
 
   onSubmit(): void {
     if (this.expenseForm.valid) {
-      // Implementar guardado
+      this.expenseService.createExpense(this.expenseForm.value).subscribe({
+        next: () => {
+          this.expenseForm.reset();
+        }
+      });
     }
   }
 }

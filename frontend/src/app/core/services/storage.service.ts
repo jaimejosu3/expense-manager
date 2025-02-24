@@ -18,6 +18,7 @@ export class StorageService {
   get<T>(key: string): T | null {
     try {
       const item = this.storage.getItem(key);
+      if (key === 'token') return item as unknown as T;
       return item ? JSON.parse(item) : null;
     } catch (error) {
       console.error('Error reading from storage:', error);

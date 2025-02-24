@@ -10,6 +10,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { BudgetService } from '../../services/budget.service';
 import { CategoryService } from '../../../categories/services/category.service';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-budget-form',
@@ -22,10 +23,14 @@ import { CategoryService } from '../../../categories/services/category.service';
     MatSelectModule,
     MatDatepickerModule,
     MatButtonModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatNativeDateModule
   ],
   templateUrl: './budget-form.component.html',
-  styleUrl: './budget-form.component.scss'
+  styleUrl: './budget-form.component.scss',
+  providers: [
+    MatNativeDateModule
+  ]
 })
 export class BudgetFormComponent implements OnInit {
   budgetForm: FormGroup;
