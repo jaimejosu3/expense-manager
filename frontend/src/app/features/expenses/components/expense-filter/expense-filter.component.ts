@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ExpenseFilters } from '../../../../core/interfaces/requests/expense.requests';
 import { MatCardModule } from '@angular/material/card';
+import { CategoryService } from '../../../categories/services/category.service';
 
 @Component({
   selector: 'app-expense-filter',
@@ -33,11 +34,21 @@ export class ExpenseFilterComponent {
   filterForm: FormGroup;
   categories: any[] = [];
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private categoryService: CategoryService,) {
     this.filterForm = this.fb.group({
       startDate: [null],
       endDate: [null],
       categoryId: [''],
+    });
+  }
+
+  ngOnInit(): void {
+    this.loadCategories();
+  }
+
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe(categories => {
+      this.categories = categories;
     });
   }
 

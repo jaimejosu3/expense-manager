@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { ExpenseFilterComponent } from '../../components/expense-filter/expense-filter.component';
 import { ExpenseTableComponent } from '../../components/expense-table/expense-table.component';
 import { ExpenseService } from '../../services/expense.service';
@@ -26,7 +26,7 @@ export class ExpenseListComponent implements OnInit {
   expenses: Expense[] = [];
   loading = false;
 
-  constructor(private expenseService: ExpenseService) { }
+  constructor(private expenseService: ExpenseService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadExpenses();
@@ -36,7 +36,7 @@ export class ExpenseListComponent implements OnInit {
     this.loading = true;
     this.expenseService.getExpenses().subscribe({
       next: (expenses) => {
-        this.expenses = expenses.items;
+        this.expenses = expenses;
         this.loading = false;
       },
       error: () => {
@@ -49,7 +49,7 @@ export class ExpenseListComponent implements OnInit {
     this.loading = true;
     this.expenseService.getExpenses(filters).subscribe({
       next: (expenses) => {
-        this.expenses = expenses.items;
+        this.expenses = expenses;
         this.loading = false;
       },
       error: () => {
@@ -60,6 +60,7 @@ export class ExpenseListComponent implements OnInit {
 
   onEdit(expense: Expense): void {
     // Implementar navegación a edición
+    this.router.navigate(['/expenses/' + expense.id + '/edit']);
   }
 
   onDelete(expense: Expense): void {

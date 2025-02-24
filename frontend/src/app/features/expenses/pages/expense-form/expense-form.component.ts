@@ -9,6 +9,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { ExpenseService } from '../../services/expense.service';
 import { CategoryService } from '../../../categories/services/category.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Expense } from '../../../../core/models/expense/expense.model';
 
 @Component({
   selector: 'app-expense-form',
@@ -29,6 +31,7 @@ import { CategoryService } from '../../../categories/services/category.service';
 export class ExpenseFormComponent implements OnInit {
   expenseForm: FormGroup;
   categories: any[] = [];
+  currentExpenseId = '';
   loading = false;
   isEditing = false;
 
@@ -36,6 +39,8 @@ export class ExpenseFormComponent implements OnInit {
     private fb: FormBuilder,
     private expenseService: ExpenseService,
     private categoryService: CategoryService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.expenseForm = this.fb.group({
       description: ['', Validators.required],
@@ -43,6 +48,15 @@ export class ExpenseFormComponent implements OnInit {
       categoryId: ['', Validators.required],
       date: [new Date(), Validators.required],
       notes: ['']
+    });
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        this.isEditing = true;
+        this.expenseService.getExpenseById(params['id']).subscribe(expense => {
+          this.currentExpenseId = expense.id;
+          this.expenseForm.patchValue(expense);
+        });
+      }
     });
   }
 
@@ -58,11 +72,19 @@ export class ExpenseFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.expenseForm.valid) {
-      this.expenseService.createExpense(this.expenseForm.value).subscribe({
-        next: () => {
-          this.expenseForm.reset();
-        }
-      });
+      if (this.isEditing) {
+        this.expenseService.updateExpense(this.currentExpenseId, this.expenseForm.value).subscribe({
+          next: () => {
+            this.router.navigate(['/expenses']);
+          }
+        });
+      } else {
+        this.expenseService.createExpense(this.expenseForm.value).subscribe({
+          next: () => {
+            this.expenseForm.reset();
+          }
+        });
+      }
     }
   }
 }

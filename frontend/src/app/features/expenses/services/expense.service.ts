@@ -8,7 +8,6 @@ import {
   UpdateExpenseRequest,
   ExpenseFilters
 } from '../../../core/interfaces/requests/expense.requests';
-import { PaginatedResponse } from '../../../core/interfaces/common/pagination.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,8 +17,8 @@ export class ExpenseService {
 
   constructor(private http: HttpService) { }
 
-  getExpenses(filters?: ExpenseFilters): Observable<PaginatedResponse<Expense>> {
-    return this.http.get<PaginatedResponse<Expense>>(this.baseUrl, filters)
+  getExpenses(filters?: ExpenseFilters): Observable<Expense[]> {
+    return this.http.get<Expense[]>(this.baseUrl, filters)
       .pipe(
         map(response => response.data)
       );
