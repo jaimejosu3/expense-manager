@@ -1,1 +1,33 @@
-<p>budget-alerts works!</p>
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Alertas</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+        @if (alerts.length === 0) {
+        <p class="text-gray-500">No hay alertas configuradas</p>
+        } @else {
+        <div class="space-y-2">
+            @for (alert of alerts; track alert.id) {
+            <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
+                <div>
+                    <div>{{ alert.threshold }}% del presupuesto</div>
+                    <div class="text-sm text-gray-600">
+                        {{ alert.isTriggered ? 'Activada' : 'Pendiente' }}
+                    </div>
+                </div>
+                <button mat-icon-button color="warn" (click)="delete.emit(alert)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+            }
+        </div>
+        }
+    </mat-card-content>
+
+    <mat-card-actions>
+        <button mat-button color="primary" (click)="addAlert.emit()">
+            Agregar Alerta
+        </button>
+    </mat-card-actions>
+</mat-card>

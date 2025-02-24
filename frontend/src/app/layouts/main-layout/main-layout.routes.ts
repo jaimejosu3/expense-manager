@@ -18,6 +18,16 @@ export const MAIN_ROUTES: Routes = [
             .then(m => m.CATEGORY_ROUTES)
     },
     {
+        path: 'budgets',
+        loadChildren: () => import('../../features/budgets/budget.routes')
+            .then(m => m.BUDGET_ROUTES)
+    },
+    {
+        path: 'reports',
+        loadChildren: () => import('../../features/reports/reports.routes')
+            .then(m => m.REPORT_ROUTES)
+    },
+    {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

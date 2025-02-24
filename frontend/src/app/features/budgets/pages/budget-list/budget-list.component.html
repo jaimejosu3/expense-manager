@@ -1,1 +1,28 @@
-<p>budget-list works!</p>
+<div class="p-4">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">Presupuestos</h1>
+        <button mat-raised-button color="primary" [routerLink]="['new']">
+            <mat-icon>add</mat-icon>
+            Nuevo Presupuesto
+        </button>
+    </div>
+
+    <mat-tab-group>
+        <mat-tab label="Activos">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                @for (budget of activeBudgets; track budget.id) {
+                <app-budget-progress [budget]="budget" (click)="onBudgetClick(budget)">
+                </app-budget-progress>
+                }
+            </div>
+        </mat-tab>
+        <mat-tab label="Histórico">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                @for (budget of inactiveBudgets; track budget.id) {
+                <app-budget-progress [budget]="budget" (click)="onBudgetClick(budget)">
+                </app-budget-progress>
+                }
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

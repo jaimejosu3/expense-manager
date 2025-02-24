@@ -1,1 +1,23 @@
-<p>budget-progress works!</p>
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>{{ budget.name }}</mat-card-title>
+        <mat-card-subtitle>
+            {{ budget.currentSpent | currency }} / {{ budget.amount | currency }}
+        </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+        <mat-progress-bar [mode]="'determinate'" [value]="progressPercentage" [color]="progressColor">
+        </mat-progress-bar>
+
+        <div class="mt-2 text-sm text-gray-600">
+            {{ remainingAmount | currency }} restantes
+        </div>
+
+        @if (isOverBudget) {
+        <div class="mt-2 text-sm text-red-500">
+            Excedido por {{ overBudgetAmount | currency }}
+        </div>
+        }
+    </mat-card-content>
+</mat-card>

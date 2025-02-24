@@ -1,0 +1,12 @@
+:host {
+    display: block;
+}
+
+app-budget-progress {
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:hover {
+        transform: translateY(-2px);
+    }
+}
