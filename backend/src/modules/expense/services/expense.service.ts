@@ -43,8 +43,6 @@ export class ExpenseService {
         if (filters.maxAmount) {
             where.amount = LessThanOrEqual(filters.maxAmount);
         }
-        console.log('where');
-        console.log(where);
 
         return await this.expenseRepository.find({
             where,

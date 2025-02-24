@@ -47,6 +47,9 @@ export class ExpenseListComponent implements OnInit {
 
   onFilterChange(filters: any): void {
     this.loading = true;
+    if (!filters.startDate) delete filters.startDate;
+    if (!filters.endDate) delete filters.endDate;
+    if (!filters.category) delete filters.category;
     this.expenseService.getExpenses(filters).subscribe({
       next: (expenses) => {
         this.expenses = expenses;
@@ -59,11 +62,12 @@ export class ExpenseListComponent implements OnInit {
   }
 
   onEdit(expense: Expense): void {
-    // Implementar navegación a edición
     this.router.navigate(['/expenses/' + expense.id + '/edit']);
   }
 
   onDelete(expense: Expense): void {
-    // Implementar eliminación
+    this.expenseService.deleteExpense(expense.id).subscribe(() => {
+      this.loadExpenses();
+    });
   }
 }

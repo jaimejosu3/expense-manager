@@ -28,7 +28,4 @@ export class ExpenseTableComponent {
   @Output() onDelete = new EventEmitter<Expense>();
 
   displayedColumns = ['date', 'description', 'category', 'amount', 'actions'];
-  ngOnInit(): void {
-    console.log('expenses', this.expenses);
-  }
 }

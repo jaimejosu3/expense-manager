@@ -39,7 +39,6 @@ export class AuthService {
     }
 
     private handleAuthResponse(response: AuthResponse): void {
-        console.log(response);
         localStorage.setItem('token', response.data.access_token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
         this.currentUserSubject.next(response.data.user);
