@@ -23,7 +23,16 @@ export class ExpenseSummaryComponent implements OnInit {
   }
 
   loadExpenses(): void {
-    this.expenseService.getExpenses().subscribe(expenses => {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    const endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+    const dateParams = {
+      startDate: startDate.toISOString().split('T')[0],
+      endDate: endDate.toISOString().split('T')[0]
+    };
+
+    this.expenseService.getExpenses({ ...dateParams }).subscribe(expenses => {
       this.totalExpenses = expenses.reduce((acc, expense) => acc + parseFloat(expense.amount.toString()), 0);
     });
   }

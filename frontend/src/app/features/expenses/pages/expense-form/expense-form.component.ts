@@ -81,7 +81,7 @@ export class ExpenseFormComponent implements OnInit {
       } else {
         this.expenseService.createExpense(this.expenseForm.value).subscribe({
           next: () => {
-            this.expenseForm.reset();
+            this.router.navigate(['/expenses']);
           }
         });
       }

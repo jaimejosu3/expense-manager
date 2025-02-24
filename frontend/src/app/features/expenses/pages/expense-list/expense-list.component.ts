@@ -47,8 +47,22 @@ export class ExpenseListComponent implements OnInit {
 
   onFilterChange(filters: any): void {
     this.loading = true;
-    if (!filters.startDate) delete filters.startDate;
-    if (!filters.endDate) delete filters.endDate;
+    if (filters.startDate) {
+      filters.startDate = filters.startDate instanceof Date
+        ? filters.startDate.toISOString().split('T')[0]
+        : filters.startDate;
+    } else {
+      delete filters.startDate;
+    }
+
+    if (filters.endDate) {
+      filters.endDate = filters.endDate instanceof Date
+        ? filters.endDate.toISOString().split('T')[0]
+        : filters.endDate;
+    } else {
+      delete filters.endDate;
+    }
+
     if (!filters.category) delete filters.category;
     this.expenseService.getExpenses(filters).subscribe({
       next: (expenses) => {

@@ -10,8 +10,8 @@ export interface CreateExpenseRequest {
 export interface UpdateExpenseRequest extends Partial<CreateExpenseRequest> { }
 
 export interface ExpenseFilters {
-    startDate?: Date;
-    endDate?: Date;
+    startDate?: String;
+    endDate?: String;
     categoryId?: string;
     minAmount?: number;
     maxAmount?: number;
