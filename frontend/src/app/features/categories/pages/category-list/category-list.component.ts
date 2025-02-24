@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CategoryCardComponent } from '../../components/category-card/category-card.component';
@@ -23,7 +23,7 @@ import { Category } from '../../../../core/models/category/category.model';
 export class CategoryListComponent implements OnInit {
   categories: Category[] = [];
 
-  constructor(private categoryService: CategoryService) { }
+  constructor(private categoryService: CategoryService, private router: Router) { }
 
   ngOnInit(): void {
     this.loadCategories();
@@ -36,10 +36,6 @@ export class CategoryListComponent implements OnInit {
   }
 
   onEdit(category: Category): void {
-    // Implementar navegación a edición
-  }
-
-  onDelete(category: Category): void {
-    // Implementar eliminación
+    this.router.navigate(['categories', category.id, 'edit']);
   }
 }

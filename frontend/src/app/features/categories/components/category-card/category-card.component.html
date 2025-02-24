@@ -1,9 +1,6 @@
 <mat-card [style.borderLeft]="'4px solid ' + category.color">
     <mat-card-header>
         <mat-card-title>{{ category.name }}</mat-card-title>
-        <mat-card-subtitle>
-            Presupuesto: {{ category.budget | currency }}
-        </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
@@ -13,9 +10,6 @@
     <mat-card-actions align="end">
         <button mat-icon-button (click)="edit.emit(category)">
             <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="delete.emit(category)">
-            <mat-icon>delete</mat-icon>
         </button>
     </mat-card-actions>
 </mat-card>

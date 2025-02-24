@@ -65,12 +65,16 @@ export class CategoryFormComponent implements OnInit {
 
       operation.subscribe({
         next: () => {
-          this.router.navigate(['../'], { relativeTo: this.route });
+          this.router.navigate(['categories']);
         },
         error: () => {
           this.loading = false;
         }
       });
     }
+  }
+  cancel(): void {
+    console.log('cancel');
+    this.router.navigate(['categories']);
   }
 }

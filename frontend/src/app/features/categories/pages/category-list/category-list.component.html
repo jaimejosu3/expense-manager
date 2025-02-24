@@ -9,7 +9,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         @for (category of categories; track category.id) {
-        <app-category-card [category]="category" (edit)="onEdit($event)" (delete)="onDelete($event)">
+        <app-category-card [category]="category" (edit)="onEdit($event)">
         </app-category-card>
         }
     </div>

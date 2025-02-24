@@ -96,4 +96,8 @@ export class BudgetFormComponent implements OnInit {
       });
     }
   }
+
+  cancel(): void {
+    this.router.navigate(['../'], { relativeTo: this.route });
+  }
 }

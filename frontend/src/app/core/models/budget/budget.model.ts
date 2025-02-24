@@ -5,6 +5,7 @@ export interface Budget {
     startDate: Date;
     endDate: Date;
     categoryId: string;
+    categoryName: string;
     userId: string;
     currentSpent: number;
     isRecurring: boolean;

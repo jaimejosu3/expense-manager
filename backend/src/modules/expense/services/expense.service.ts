@@ -6,13 +6,15 @@ import { CreateExpenseDto } from '../dto/create-expense.dto';
 import { ExpenseFiltersDto } from '../dto/expense-filters.dto';
 import { User } from 'src/modules/user/entities/user.entity';
 import { BudgetService } from 'src/modules/budget/services/budget.service';
+import { CategoryService } from './category.service';
 
 @Injectable()
 export class ExpenseService {
     constructor(
         @InjectRepository(Expense)
         private expenseRepository: Repository<Expense>,
-        private budgetService: BudgetService
+        private budgetService: BudgetService,
+        private categoryService: CategoryService,
     ) { }
 
     async create(createExpenseDto: CreateExpenseDto, userId: User): Promise<Expense> {
@@ -20,16 +22,14 @@ export class ExpenseService {
             ...createExpenseDto,
             userId: userId.id,
         });
-        let budgets = await this.budgetService.findAll(userId, { onlyActive: true });
-        if (budgets.length > 0) {
-            console.log(budgets, expense.categoryId);
-            let budget = budgets.find(budget => budget.categoryId === expense.categoryId);
+        const currentDate = new Date(createExpenseDto.date);
+        const budget = await this.budgetService.findOneByCategoryAndDate(expense.categoryId, currentDate, userId);
 
-            console.log(budget, expense);
-            if (budget) {
-                this.budgetService.addExpenseAmount(budget.id, expense.amount);
-            }
+        if (!budget) {
+            let category = await this.categoryService.findOne(expense.categoryId, userId);
+            throw new NotFoundException(`Need a budget with ${category.name} for create expense`);
         }
+        this.budgetService.addExpenseAmount(budget.id, expense.amount);
         return await this.expenseRepository.save(expense);
     }
 
@@ -78,6 +78,17 @@ export class ExpenseService {
 
     async update(id: string, updateExpenseDto: Partial<CreateExpenseDto>, userId: User): Promise<Expense> {
         const expense = await this.findOne(id, userId);
+        if (expense.amount !== updateExpenseDto.amount || expense.categoryId !== updateExpenseDto.categoryId) {
+            const currentDate = new Date(expense.date);
+            const budget = await this.budgetService.findOneByCategoryAndDate(expense.categoryId, currentDate, userId);
+            if (!budget) throw new NotFoundException(`Not found budget for this expense`);
+
+            const newCurrentDate = new Date(updateExpenseDto.date || expense.date);
+            const newBudget = await this.budgetService.findOneByCategoryAndDate(updateExpenseDto.categoryId || expense.categoryId, newCurrentDate, userId);
+            if (!newBudget) throw new NotFoundException(`Not found budget for this expense`);
+            this.budgetService.removeExpenseAmount(budget.id, expense.amount);
+            this.budgetService.addExpenseAmount(newBudget.id, updateExpenseDto.amount || expense.amount);
+        }
         Object.assign(expense, updateExpenseDto);
         return await this.expenseRepository.save(expense);
     }

@@ -87,4 +87,9 @@ export class ExpenseFormComponent implements OnInit {
       }
     }
   }
+
+  cancel(): void {
+    console.log('cancel');
+    this.router.navigate(['/expenses']);
+  }
 }
