@@ -72,6 +72,7 @@ export class ExpenseFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.expenseForm.valid) {
+      this.expenseForm.value.amount = parseFloat(this.expenseForm.value.amount);
       if (this.isEditing) {
         this.expenseService.updateExpense(this.currentExpenseId, this.expenseForm.value).subscribe({
           next: () => {
@@ -89,7 +90,6 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   cancel(): void {
-    console.log('cancel');
     this.router.navigate(['/expenses']);
   }
 }

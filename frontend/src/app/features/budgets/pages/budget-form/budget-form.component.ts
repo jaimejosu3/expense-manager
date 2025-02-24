@@ -80,6 +80,7 @@ export class BudgetFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.budgetForm.valid) {
+      if (this.budgetForm.value.budget) this.budgetForm.value.budget = parseFloat(this.budgetForm.value.budget);
       this.loading = true;
       const budgetId = this.route.snapshot.paramMap.get('id');
       const operation = budgetId

@@ -33,7 +33,6 @@ export class BudgetService {
     }
 
     async findAll(userId: User, filters: BudgetFiltersDto): Promise<BudgetSummaryDto[]> {
-        console.log(filters)
         const where: any = { userId: userId.id };
 
         if (filters.startDate && filters.endDate) {
@@ -82,7 +81,6 @@ export class BudgetService {
             where: { categoryId, startDate: LessThanOrEqual(date), endDate: MoreThanOrEqual(date), userId: userId.id },
             relations: ['category', 'alerts']
         });
-        console.log(budget)
         return budget || undefined;
     }
 
@@ -140,7 +138,7 @@ export class BudgetService {
         if (!budget) {
             throw new NotFoundException(`Budget with ID "${budgetId}" not found`);
         }
-        budget.currentSpent = parseFloat(budget.currentSpent.toString()) + amount;
+        budget.currentSpent = parseFloat(budget.currentSpent.toString()) + parseFloat(amount.toString());
         await this.budgetRepository.save(budget);
 
         // Check and trigger alerts

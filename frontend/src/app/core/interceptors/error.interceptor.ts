@@ -19,7 +19,6 @@ export const errorInterceptor: HttpInterceptorFn = (req, next) => {
                     duration: 5000
                 });
             } else if (error.status === 404) {
-                console.log(error)
                 snackBar.open(error.error.message || 'Recurso no encontrado', 'Cerrar', {
                     duration: 3000
                 });

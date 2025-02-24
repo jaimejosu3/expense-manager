@@ -86,10 +86,17 @@ export class ExpenseService {
             const newCurrentDate = new Date(updateExpenseDto.date || expense.date);
             const newBudget = await this.budgetService.findOneByCategoryAndDate(updateExpenseDto.categoryId || expense.categoryId, newCurrentDate, userId);
             if (!newBudget) throw new NotFoundException(`Not found budget for this expense`);
-            this.budgetService.removeExpenseAmount(budget.id, expense.amount);
-            this.budgetService.addExpenseAmount(newBudget.id, updateExpenseDto.amount || expense.amount);
+            await this.budgetService.removeExpenseAmount(budget.id, expense.amount);
+            await this.budgetService.addExpenseAmount(newBudget.id, updateExpenseDto.amount || expense.amount);
         }
         Object.assign(expense, updateExpenseDto);
+        if (updateExpenseDto.categoryId) {
+            let category = await this.categoryService.findOne(updateExpenseDto.categoryId, userId);
+            if (!category) {
+                throw new NotFoundException(`Category with ID "${updateExpenseDto.categoryId}" not found`);
+            }
+            expense.category = category
+        }
         return await this.expenseRepository.save(expense);
     }
 

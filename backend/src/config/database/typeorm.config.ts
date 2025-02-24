@@ -18,7 +18,7 @@ export class TypeOrmConfigService {
             migrations: ['dist/migrations/*{.ts,.js}'],
             migrationsRun: true,
             synchronize: this.configService.get<string>('NODE_ENV') === 'development',
-            logging: this.configService.get<string>('NODE_ENV') === 'development',
+            logging: false//this.configService.get<string>('NODE_ENV') === 'development',
         };
     }
 }

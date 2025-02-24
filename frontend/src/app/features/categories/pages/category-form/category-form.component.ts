@@ -57,6 +57,7 @@ export class CategoryFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.categoryForm.valid) {
+      if (this.categoryForm.value.budget) this.categoryForm.value.budget = parseFloat(this.categoryForm.value.budget);
       this.loading = true;
       const categoryId = this.route.snapshot.paramMap.get('id');
       const operation = categoryId
@@ -74,7 +75,6 @@ export class CategoryFormComponent implements OnInit {
     }
   }
   cancel(): void {
-    console.log('cancel');
     this.router.navigate(['categories']);
   }
 }
