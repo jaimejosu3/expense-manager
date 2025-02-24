@@ -1,0 +1,16 @@
+<div class="p-4">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">Gastos</h1>
+        <button mat-raised-button color="primary" [routerLink]="['new']">
+            <mat-icon>add</mat-icon>
+            Nuevo Gasto
+        </button>
+    </div>
+
+    <app-expense-filter (filterChange)="onFilterChange($event)">
+    </app-expense-filter>
+
+    <app-expense-table [expenses]="expenses" [loading]="loading" (onEdit)="onEdit($event)"
+        (onDelete)="onDelete($event)">
+    </app-expense-table>
+</div>

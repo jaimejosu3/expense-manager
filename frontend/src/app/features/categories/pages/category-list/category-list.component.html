@@ -1,0 +1,16 @@
+<div class="p-4">
+    <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold">Categorías</h1>
+        <button mat-raised-button color="primary" [routerLink]="['new']">
+            <mat-icon>add</mat-icon>
+            Nueva Categoría
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        @for (category of categories; track category.id) {
+        <app-category-card [category]="category" (edit)="onEdit($event)" (delete)="onDelete($event)">
+        </app-category-card>
+        }
+    </div>
+</div>
