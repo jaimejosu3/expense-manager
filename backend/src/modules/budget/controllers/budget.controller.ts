@@ -19,13 +19,14 @@ import { UpdateBudgetDto } from '../dto/update-budget.dto';
 import { BudgetFiltersDto } from '../dto/budget-filters.dto';
 import { BudgetStatusDto, BudgetSummaryDto } from '../dto/budget-response.dto';
 import { User } from '../../user/entities/user.entity';
+import { CategoryService } from 'src/modules/expense/services/category.service';
 
 @ApiTags('budgets')
 @ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('budgets')
 export class BudgetController {
-    constructor(private readonly budgetService: BudgetService) { }
+    constructor(private readonly budgetService: BudgetService, private readonly categoryService: CategoryService) { }
 
     @Post()
     @ApiOperation({ summary: 'Create new budget' })
@@ -34,7 +35,8 @@ export class BudgetController {
         @Body() createBudgetDto: CreateBudgetDto,
         @CurrentUser() userId: User
     ) {
-        const budget = await this.budgetService.create(createBudgetDto, userId);
+        let budget = await this.budgetService.create(createBudgetDto, userId);
+        budget.category = await this.categoryService.findOne(budget.categoryId, userId);
         return this.budgetService.toBudgetSummary(budget);
     }
 
