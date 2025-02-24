@@ -23,11 +23,6 @@ export const MAIN_ROUTES: Routes = [
             .then(m => m.BUDGET_ROUTES)
     },
     {
-        path: 'reports',
-        loadChildren: () => import('../../features/reports/reports.routes')
-            .then(m => m.REPORT_ROUTES)
-    },
-    {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

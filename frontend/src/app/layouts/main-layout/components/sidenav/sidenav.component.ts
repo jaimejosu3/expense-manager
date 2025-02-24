@@ -16,7 +16,6 @@ export class SidenavComponent {
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
     { label: 'Gastos', icon: 'receipt', route: '/expenses' },
     { label: 'Categorías', icon: 'category', route: '/categories' },
-    { label: 'Presupuestos', icon: 'account_balance_wallet', route: '/budgets' },
-    { label: 'Reportes', icon: 'bar_chart', route: '/reports' }
+    { label: 'Presupuestos', icon: 'account_balance_wallet', route: '/budgets' }
   ];
 }

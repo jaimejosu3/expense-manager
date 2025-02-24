@@ -51,6 +51,9 @@ export class BudgetSummaryDto {
     endDate: Date;
 
     @ApiProperty()
+    categoryId: string;
+
+    @ApiProperty()
     categoryName: string;
 
     @ApiProperty()

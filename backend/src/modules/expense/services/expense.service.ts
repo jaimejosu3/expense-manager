@@ -5,12 +5,14 @@ import { Expense } from '../entities/expense.entity';
 import { CreateExpenseDto } from '../dto/create-expense.dto';
 import { ExpenseFiltersDto } from '../dto/expense-filters.dto';
 import { User } from 'src/modules/user/entities/user.entity';
+import { BudgetService } from 'src/modules/budget/services/budget.service';
 
 @Injectable()
 export class ExpenseService {
     constructor(
         @InjectRepository(Expense)
         private expenseRepository: Repository<Expense>,
+        private budgetService: BudgetService
     ) { }
 
     async create(createExpenseDto: CreateExpenseDto, userId: User): Promise<Expense> {
@@ -18,6 +20,16 @@ export class ExpenseService {
             ...createExpenseDto,
             userId: userId.id,
         });
+        let budgets = await this.budgetService.findAll(userId, { onlyActive: true });
+        if (budgets.length > 0) {
+            console.log(budgets, expense.categoryId);
+            let budget = budgets.find(budget => budget.categoryId === expense.categoryId);
+
+            console.log(budget, expense);
+            if (budget) {
+                this.budgetService.addExpenseAmount(budget.id, expense.amount);
+            }
+        }
         return await this.expenseRepository.save(expense);
     }
 

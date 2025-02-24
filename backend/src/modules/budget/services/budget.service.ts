@@ -68,6 +68,7 @@ export class BudgetService {
             currentSpent: budget.currentSpent,
             startDate: budget.startDate,
             endDate: budget.endDate,
+            categoryId: budget.categoryId,
             categoryName: budget.category.name,
             percentageUsed: (budget.currentSpent / budget.amount) * 100,
             daysRemaining,
@@ -129,8 +130,7 @@ export class BudgetService {
         if (!budget) {
             throw new NotFoundException(`Budget with ID "${budgetId}" not found`);
         }
-
-        budget.currentSpent += amount;
+        budget.currentSpent = parseFloat(budget.currentSpent.toString()) + amount;
         await this.budgetRepository.save(budget);
 
         // Check and trigger alerts
